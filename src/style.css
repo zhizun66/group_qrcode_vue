@@ -1,0 +1,119 @@
+:root {
+	--color-work: #0054E9;
+	--color-weixin: #04C15F;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: Arial, '微软雅黑', '宋体', Helvetica, sans-serif;
+	font-size: 14px;
+	color: #333;
+	background-color: #F3F8FD;
+}
+
+.app-header {
+	height: 60px;
+	background-color: #FFF;
+	padding: 0 20px;
+	border-bottom: 1px #F2F2F2 solid;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 3;
+}
+
+.app-name {
+	display: flex;
+	align-items: center;
+	font-weight: bold;
+}
+
+.app-name div {
+	background-color: var(--el-color-primary);
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	margin-right: 8px;
+}
+
+.app-menu {
+	flex-grow: 1;
+}
+
+.app-balance {
+	margin-left: 15px;
+}
+
+.app-balance span {
+	font-weight: bold;
+	margin-left: 4px;
+}
+
+.app-user .dropdown-link {
+	display: flex;
+	color: var(--el-color-primary);
+	cursor: pointer;
+}
+.app-user .dropdown-link > span {
+	margin-right: 3px;
+}
+
+.main {
+	margin-top: 60px;
+	margin-left: 200px;
+	padding: 15px;
+}
+
+.common-header {
+	display: flex;
+}
+
+.common-filter {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.common-filter > * {
+	margin: 0 12px 16px 0;
+}
+
+.common-filter-buttons {
+	display: inline-block;
+}
+
+.common-filter > *:not(:last-child) {
+	width: 180px;
+	/* margin-right: 10px; */
+}
+
+.common-action {
+	flex: 1;
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 16px;
+}
+
+.common-main {
+	display: flex;
+	flex-direction: column;
+	height: calc(100vh - 90px);
+}
+
+.common-content {
+	flex-grow: 1;
+	overflow: hidden;
+}
+
+.common-pagination {
+	display: flex;
+	justify-content: center;
+	padding-top: 10px;
+}
