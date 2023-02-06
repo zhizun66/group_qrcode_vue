@@ -6,13 +6,13 @@ import Income from '../views/Income.vue'
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
+    // {
+    //   path: '/',
+    //   name: 'income',
+    //   component: Income
+    // },
     {
       path: '/',
-      name: 'income',
-      component: Income
-    },
-    {
-      path: '/qrcode',
       name: 'qrcode',
       component: Qrcode
     },

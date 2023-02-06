@@ -2,6 +2,7 @@
   <div class="common-main">
     <div class="common-header">
       <div class="common-filter">
+        <el-input placeholder="账号" clearable v-model="filter.username"></el-input>
         <el-input placeholder="企业" clearable v-model="filter.company"></el-input>
         <div class="common-filter-buttons">
           <el-button :icon="Search" @click="onFilterClick">查询</el-button>
@@ -9,7 +10,7 @@
         </div>
       </div>
       <div class="common-action">
-        <el-button type="primary" :icon="Plus" @click="showAddDlg = true">添加群码</el-button>
+        <!-- <el-button type="primary" :icon="Plus" @click="showAddDlg = true">添加群码</el-button> -->
       </div>
     </div>
     <div class="common-content">
@@ -23,23 +24,14 @@
           </template>
         </el-table-column>
         <el-table-column label="群名称" prop="name" :formatter="cellFormatter" />
-        <!-- <el-table-column label="标签" :formatter="cellFormatter" min-width="160px">
-          <template #default="scope">
-            <el-tag style="margin:2px;" v-for="tag of scope.row.tags" :key="tag" v-if="scope.row.tags.length > 0">
-              {{tag}}</el-tag>
-            <span v-else>--</span>
-          </template>
-        </el-table-column> -->
-        <el-table-column label="成员" align="center" width="80px">
+        <el-table-column label="成员数量" align="center">
           <template #default="scope">{{scope.row.members === null ? '--' : scope.row.members}}</template>
         </el-table-column>
         <el-table-column label="企业" prop="company" :formatter="cellFormatter" />
-        <!-- <el-table-column label="地区" prop="area" :formatter="areaFormatter" />
-        <el-table-column label="备注" prop="remark" :formatter="cellFormatter" /> -->
         <el-table-column label="类型" width="80px">
           <template #default="scope">{{scope.row.type === 1 ? '企微' : '个微'}}</template>
         </el-table-column>
-        <el-table-column label="状态" width="80px" align="center">
+        <el-table-column label="状态" align="center" width="80px">
           <template #default="scope">
             <span
               :style="{color: ['var(--el-color-warning)', 'var(--el-color-success)', 'var(--el-color-success)', 'var(--el-color-info)'][scope.row.status]}">{{['等待审核',
@@ -49,20 +41,20 @@
         <!-- <el-table-column label="价格" align="center">
           <template #default="scope">{{scope.row.price}} 金币</template>
         </el-table-column> -->
-        <el-table-column label="下载次数" width="80px" align="center">
-          <template #default="scope">{{scope.row.buy_cnt}}</template>
-        </el-table-column>
-        <el-table-column label="到期时间" prop="expire_date" align="center" width="160px" :formatter="cellFormatter" />
-        <el-table-column label="添加时间" prop="add_time" align="center" width="160px" />
-        <el-table-column label="操作" align="center" width="300px">
+        <!-- <el-table-column label="下载次数" align="center">
+          <template #default="scope">{{scope.row.buy_cnt}}/{{scope.row.limit}}</template>
+        </el-table-column> -->
+        <el-table-column label="有效期" prop="expire_date" align="center" width="100px" :formatter="cellFormatter" />
+        <el-table-column label="添加时间" prop="add_time" align="center" width="100px" />
+        <!-- <el-table-column label="操作" align="right" width="300px">
           <template #default="scope">
             <el-button type="primary" plain :icon="Edit" @click="onItemEditClick(scope.row)">编辑</el-button>
-            <!-- <el-button :disabled="scope.row.status !== 1" :type="scope.row.hide === 0 ? 'warning' : 'info'" plain
+            <el-button :disabled="scope.row.status !== 1" :type="scope.row.hide === 0 ? 'warning' : 'info'" plain
               :icon="scope.row.hide === 0 ? Hide : View" @click="onItemHideClick(scope.row)">{{scope.row.hide === 0 ?
-              '下架' : '上架'}}</el-button> -->
+              '下架' : '上架'}}</el-button>
             <el-button type="danger" plain :icon="Delete" @click="onItemDeleteClick(scope.row)">删除</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
     </div>
     <div class="common-pagination">
@@ -103,20 +95,19 @@
           <el-radio :label="2" border>个微</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="企业名" prop="company">
-        <el-input v-model="formData.company" clearable />
-      </el-form-item>
-      <!-- <el-form-item label="标&emsp;签" prop="tags">
+      <el-form-item label="标&emsp;签" prop="tags">
         <el-select v-model="formData.tags" style="width:100%;" clearable filterable multiple>
           <el-option v-for="tag of tags" :key="tag.id" :label="tag.name" :value="tag.id" />
         </el-select>
-      </el-form-item> -->
-      <!-- <div style="text-align:center;margin-bottom:20px;" v-if="!showMoreForm">
+      </el-form-item>
+      <div style="text-align:center;margin-bottom:20px;" v-if="!showMoreForm">
         <el-button type="primary" :icon="ArrowDown" text @click="showMoreForm = true">更多选项</el-button>
-      </div> -->
-      <!-- <template v-else> -->
-
-      <!-- <el-form-item label="地&emsp;区" prop="area">
+      </div>
+      <template v-else>
+        <el-form-item label="企业名" prop="company">
+          <el-input v-model="formData.company" clearable />
+        </el-form-item>
+        <el-form-item label="地&emsp;区" prop="area">
           <elui-china-area-dht placeholder="请选择" isall clearable v-model="formData.area" style="width:100%;">
           </elui-china-area-dht>
         </el-form-item>
@@ -137,8 +128,8 @@
         </el-form-item>
         <el-form-item label="限&emsp;购" prop="price">
           <el-input-number :min="0" v-model="formData.limit" style="width:100%;" clearable placeholder="限制购买下载次数" />
-        </el-form-item> -->
-      <!-- </template> -->
+        </el-form-item>
+      </template>
     </el-form>
     <div style="text-align:center;">
       <el-button type="primary" @click="onSubmitClick" :loading="submitLoading">提交</el-button>
@@ -148,7 +139,7 @@
   <!-- 修改对话框 -->
   <el-dialog v-model="showEditDlg" title="修改群码" width="350px" :close-on-click-modal="false" @click="onEditDlgClosed">
     <el-form label-width="55px" :model="formData" ref="editForm">
-      <!-- <template v-if="!editRow.qrcode_id">
+      <template v-if="!editRow.qrcode_id">
         <el-form-item label="群名称">
           <el-input v-model="formData.name" clearable />
         </el-form-item>
@@ -168,13 +159,10 @@
         <el-form-item label="备&emsp;注">
           <el-input v-model="formData.remark" clearable />
         </el-form-item>
-      </template> -->
-      <el-form-item label="企业名">
-        <el-input v-model="formData.company" clearable />
-      </el-form-item>
-      <!-- <el-form-item label="价&emsp;格">
+      </template>
+      <el-form-item label="价&emsp;格">
         <el-input v-model="formData.price" clearable />
-      </el-form-item> -->
+      </el-form-item>
     </el-form>
     <div style="text-align:center;">
       <el-button type="primary" @click="onEditConfirmClick">确认修改</el-button>
@@ -209,23 +197,27 @@
   const tags = ref([])
 
   const filter = reactive({
+    username: '',
     company: '',
+    area: [],
+    tags: [],
+    remark: ''
   })
 
   const chinaData = new EluiChinaAreaDht.ChinaArea().chinaAreaflat
   const showAddDlg = ref(false)
   const formData = reactive({
     qrcode: [],
-    // tags: [],
+    tags: [],
     company: '',
+    area: [],
+    remark: '',
+    name: '',
+    members: 0,
+    expire: '',
+    price: 0,
     type: 1,
-    // area: [],
-    // remark: '',
-    // name: '',
-    // members: 0,
-    // expire: '',
-    // price: 0,
-    // limit: 0
+    limit: 0
   })
   const formRule = reactive({
     qrcode: {
@@ -238,14 +230,14 @@
       required: true,
       message: '类型必选'
     },
-    // tags: {
-    //   trigger: 'submit',
-    //   required: true,
-    //   message: '标签必选'
-    // }
+    tags: {
+      trigger: 'submit',
+      required: true,
+      message: '标签必选'
+    }
   })
 
-  // const showMoreForm = ref(false)
+  const showMoreForm = ref(false)
   const submitLoading = ref(false)
 
   const tableData = ref([])
@@ -270,7 +262,7 @@
 
   function loadData () {
     tableLoading.value = true
-    axios.post('provider/entrance/index', filter, {
+    axios.post('manager/entrance/index', filter, {
       page: pagination.page
     }).then(({ data }) => {
       tableData.value = data.data
@@ -304,7 +296,7 @@
   // 表单对话框关闭
   function onAddDlgClosed () {
     addForm.value.resetFields()
-    // showMoreForm.value = false
+    showMoreForm.value = false
   }
 
   const editForm = ref()
@@ -326,14 +318,14 @@
       }
 
       const fd = new FormData()
-      // fd.append('tags', formData.tags)
+      fd.append('tags', formData.tags)
       fd.append('company', formData.company)
-      // fd.append('area', formData.area)
-      // fd.append('remark', formData.remark)
-      // fd.append('name', formData.name)
-      // fd.append('members', formData.members)
-      // fd.append('expire', formData.expire)
-      // fd.append('price', formData.price)
+      fd.append('area', formData.area)
+      fd.append('remark', formData.remark)
+      fd.append('name', formData.name)
+      fd.append('members', formData.members)
+      fd.append('expire', formData.expire)
+      fd.append('price', formData.price)
       fd.append('type', formData.type)
 
       const uidArr = []
@@ -426,13 +418,14 @@
   function onItemEditClick (row) {
     showEditDlg.value = true
     editRow.value = row
+
+    formData.name = row.name
+    formData.members = row.members
+    formData.expire = row.expire_date
     formData.company = row.company
-    // formData.name = row.name
-    // formData.members = row.members
-    // formData.expire = row.expire_date
-    // formData.area = row.area
-    // formData.remark = row.remark
-    // formData.price = row.price
+    formData.area = row.area
+    formData.remark = row.remark
+    formData.price = row.price
   }
 
   // 确定修改

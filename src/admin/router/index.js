@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import User from '../views/User.vue'
 // import Staff from '../views/Staff.vue'
 import Provider from '../views/Provider.vue'
+import Manager from '../views/Manager.vue'
 import Qrcode from '../views/Qrcode.vue'
 import Entrance from '../views/Entrance.vue'
 import Tag from '../views/Tag.vue'
@@ -29,6 +30,10 @@ const router = createRouter({
 		// 	path: '/staff',
 		// 	component: Staff
 		// },
+		{
+			path: '/manager',
+			component: Manager
+		},
 		{
 			path: '/provider',
 			component: Provider

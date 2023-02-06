@@ -228,9 +228,6 @@
 
   const filter = reactive({
     company: '',
-    tags: [],
-    area: [],
-    remark: ''
   })
 
   // 区域
@@ -257,18 +254,10 @@
   const formData = reactive({
     qrcode: [],
     company: '',
-    area: [],
-    tags: [],
-    remark: '',
-    sub_status: 0
   })
   const onAddDlgClosed = () => {
     formData.qrcode = []
     formData.company = ''
-    formData.area = []
-    formData.tags = []
-    formData.remark = ''
-    formData.sub_status = 0
     addFormRef.value.resetFields()
     qrcodeUrlArr.value = []
   }
@@ -280,7 +269,7 @@
         formData.qrcode.length > 0 ? callback() : callback(new Error('活码必选'))
       }
     },
-    company: { required: true, trigger: 'blur', message: '企业名称必填' },
+    // company: { required: true, trigger: 'blur', message: '企业名称必填' },
     // tags: { required: true, trigger: 'blur', message: '标签必选' },
   })
 

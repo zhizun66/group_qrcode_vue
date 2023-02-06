@@ -13,6 +13,8 @@
       role.value = 'admin'
     } else if (location.search.startsWith('?provider')) {
       role.value = 'provider'
+    } else if (location.search.startsWith('?manager')) {
+      role.value = 'manager'
     } else {
       role.value = 'user'
     }
@@ -65,7 +67,8 @@
       const conf = {
         user: 'index/user/reg',
         staff: 'staff/user/reg',
-        provider: 'provider/base/reg'
+        provider: 'provider/base/reg',
+        provider: 'manager/base/reg'
       }
 
       axios.post(conf[role.value], regForm).then(() => {
@@ -99,6 +102,10 @@
       provider: {
         uri: 'provider/base/login',
         url: '/provider.html'
+      },
+      manager: {
+        uri: 'manager/base/login',
+        url: '/manager.html'
       }
     }
     axios.post(conf[role.value].uri, loginForm).then(() => {
@@ -108,7 +115,7 @@
   }
 
   const roleName = computed(() => (role) => {
-    return { user: '用户', staff: '员工', admin: '管理员', provider: '合作商' }[role]
+    return { user: '用户', staff: '员工', admin: '管理员', provider: '合作商', manager: 'XXX' }[role]
   })
 </script>
 

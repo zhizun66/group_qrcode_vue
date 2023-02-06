@@ -2,20 +2,13 @@
   <div class="common-main">
     <div class="common-header">
       <div class="common-filter">
-
-
-
         <el-button type="primary" plain :icon="ShoppingCart" @click="onBatchAddtoCartClick"
           :disabled="!isBatchAddButtonEnabled">批量加入购物车</el-button>
-
-
-
-
         <el-input placeholder="群名" clearable v-model="filter.group_name"></el-input>
-        <!-- <el-input placeholder="企业" clearable v-model="filter.company"></el-input> -->
-        <el-select placeholder="标签" multiple clearable collapse-tags v-model="filter.tags">
+        <el-input placeholder="企业" clearable v-model="filter.company"></el-input>
+        <!-- <el-select placeholder="标签" multiple clearable collapse-tags v-model="filter.tags">
           <el-option v-for="tag of tags" :key="tag.id" :label="tag.name" :value="tag.id" />
-        </el-select>
+        </el-select> -->
         <!-- <elui-china-area-dht placeholder="地区" isall clearable v-model="filter.area"></elui-china-area-dht> -->
 
         <!-- <el-input placeholder="备注" clearable v-model="filter.remark"></el-input> -->
@@ -53,37 +46,37 @@
         <el-table-column label="成员数量" align="center">
           <template #default="scope">{{scope.row.members === null ? '--' : scope.row.members}}</template>
         </el-table-column>
-        <!-- <el-table-column label="企业" prop="company" :formatter="cellFormatter" /> -->
+        <el-table-column label="企业" prop="company" :formatter="cellFormatter" />
         <!-- <el-table-column label="地区" prop="area" :formatter="areaFormatter" /> -->
         <!-- <el-table-column label="备注" prop="remark" :formatter="cellFormatter" /> -->
-        <el-table-column label="标签" min-width="120">
+        <!-- <el-table-column label="标签" min-width="120">
           <template #default="scope">
             <el-tag style="margin:2px;" v-for="tag of scope.row.tags" :key="tag" v-if="scope.row.tags.length > 0">
               {{tag}}</el-tag>
             <span v-else>--</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="类型" width="80">
           <template #default="scope">{{scope.row.type === 1 ? '企微' : '个微'}}</template>
         </el-table-column>
-        <el-table-column label="价格" align="center">
+        <!-- <el-table-column label="价格" align="center">
           <template #default="scope">{{scope.row.price}} 金币</template>
-        </el-table-column>
+        </el-table-column> -->
         <!-- <el-table-column label="企微可进" align="center">
           <template #default="scope">{{ ['未知', '正常', '拒绝'][scope.row.joinable] }}</template>
         </el-table-column> -->
         <el-table-column label="企微可进" width="100px" align="center" class-name="joinable">
           <template #default="scope">
             <span style="margin-right:3px;"
-              :style="{color: ['var(--el-color-warning)', 'var(--el-color-success)',  'var(--el-color-info)'][scope.row.joinable]}">{{['未知',
-              '正常', '拒绝'][scope.row.joinable]}}</span>
+              :style="{color: ['var(--el-color-warning)', 'var(--el-color-success)',  'var(--el-color-info)'][scope.row.joinable_wc]}">{{['未知',
+              '正常', '拒绝'][scope.row.joinable_wc]}}</span>
           </template>
         </el-table-column>
         <!-- <el-table-column label="销量" align="center" prop="buy_cnt"></el-table-column> -->
         <el-table-column label="到期时间" prop="expire_date" align="center" width="160" :formatter="cellFormatter" />
         <el-table-column label="验证时间" prop="update_time" align="center" width="160" :formatter="cellFormatter" />
         <el-table-column label="添加时间" prop="add_time" align="center" width="160" :formatter="cellFormatter" />
-        <el-table-column label="操作" align="right">
+        <el-table-column label="操作" width="160" align="center">
           <template #default="props">
             <el-button :type="cartType(props.row)" plain :icon="ShoppingCart"
               @click="props.row.isInCart ? onRemoveFromCartClick(props.row) : onAddToCartClick(props.row)"
@@ -132,17 +125,14 @@
   // 查询参数
   const filter = reactive({
     company: '',
-    tags: [],
-    area: [],
-    remark: '',
     group_name: '',
     // bought: 0,
     type: null,
-    joinable: null
+    joinable_wc: null
   })
 
   // 标签
-  const tags = ref([])
+  // const tags = ref([])
 
   // 列表数据
   const tableData = ref([])
@@ -196,9 +186,9 @@
   }
 
   onMounted(() => {
-    axios.get('index/common/tags').then(({ data }) => {
-      tags.value = data
-    })
+    // axios.get('index/common/tags').then(({ data }) => {
+    //   tags.value = data
+    // })
     loadData()
   })
 

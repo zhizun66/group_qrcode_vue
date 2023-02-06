@@ -32,6 +32,10 @@
 			<el-icon :size="18"><ElementPlus /></el-icon>
 			<span>员工管理</span>
 		</router-link> -->
+		<router-link to="/manager">
+			<el-icon :size="18"><Connection /></el-icon>
+			<span>叉叉管理</span>
+		</router-link>
 		<router-link to="/provider">
 			<el-icon :size="18"><Connection /></el-icon>
 			<span>合作管理</span>

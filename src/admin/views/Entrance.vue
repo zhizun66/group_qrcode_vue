@@ -19,19 +19,13 @@
 
   const filter = reactive({
     company: '',
-    area: [],
-    tags: [],
-    remark: '',
     type: null
   })
 
   const chinaData = new EluiChinaAreaDht.ChinaArea().chinaAreaflat
   const formData = reactive({
     qrcode: [],
-    tags: [],
     company: '',
-    area: [],
-    remark: '',
     name: '',
     members: 0,
     expire: '',
@@ -192,11 +186,11 @@
       <div class="common-filter">
         <!-- <el-input placeholder="企业" clearable v-model="filter.company"></el-input> -->
         <el-input placeholder="群名" clearable v-model="filter.group_name"></el-input>
-        <el-select placeholder="标签" multiple clearable collapse-tags v-model="filter.tags">
+        <!-- <el-select placeholder="标签" multiple clearable collapse-tags v-model="filter.tags">
           <el-option v-for="tag of tags" :key="tag.id" :label="tag.name" :value="tag.id" />
         </el-select>
         <elui-china-area-dht placeholder="地区" isall clearable v-model="filter.area"></elui-china-area-dht>
-        <el-input placeholder="备注" clearable v-model="filter.remark"></el-input>
+        <el-input placeholder="备注" clearable v-model="filter.remark"></el-input> -->
         <el-select placeholder="类型" clearable v-model="filter.type">
           <el-option label="企微" :value="1" />
           <el-option label="个微" :value="2" />
@@ -235,16 +229,16 @@
           </template>
         </el-table-column>
         <el-table-column label="群名称" prop="name" width="250px" :formatter="cellFormatter" />
-        <el-table-column label="成员数量" align="center">
+        <el-table-column label="成员数量" width="80px" align="center">
           <template #default="scope">{{scope.row.members === null ? '--' : scope.row.members}}</template>
         </el-table-column>
-        <el-table-column label="标签" align="left" min-width="140" :formatter="cellFormatter">
+        <!-- <el-table-column label="标签" align="left" min-width="140" :formatter="cellFormatter">
           <template #default="scope">
             <el-tag style="margin:2px;" v-for="tag of scope.row.tags" :key="tag" v-if="scope.row.tags.length > 0">
               {{tag}}</el-tag>
             <span v-else>--</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <!-- <el-table-column label="企业" prop="company" :formatter="cellFormatter" /> -->
         <!-- <el-table-column label="地区" prop="area" :formatter="areaFormatter" /> -->
@@ -252,24 +246,24 @@
         <el-table-column label="类型" width="60px">
           <template #default="scope">{{scope.row.type === 1 ? '企微' : '个微'}}</template>
         </el-table-column>
-        <el-table-column label="价格" prop="price" width="80px" align="center" />
-        <el-table-column label="购买" prop="buy_cnt" width="80px" align="center">
+        <!-- <el-table-column label="价格" prop="price" width="80px" align="center" /> -->
+        <el-table-column label="购买" prop="buy_cnt" width="60px" align="center">
           <template #default="scope">{{scope.row.buy_cnt}}次</template>
         </el-table-column>
         <el-table-column label="到期时间" prop="expire_date" align="center" :formatter="cellFormatter" />
         <el-table-column label="验证时间" prop="update_time" align="center" />
         <el-table-column label="添加时间" prop="add_time" align="center" />
-        <el-table-column label="企微拒绝" width="100px" align="center" class-name="joinable">
+        <el-table-column label="企微拒绝" width="80px" align="center" class-name="joinable">
           <template #default="scope">
             <!-- <div style="display:flex;align-items:center;justify-content:center;cursor:pointer;"> -->
             <span style="margin-right:3px;"
-              :style="{color: ['var(--el-color-warning)', 'var(--el-color-success)',  'var(--el-color-info)'][scope.row.joinable]}">{{['待验',
-              '正常', '拒绝'][scope.row.joinable]}}</span>
+              :style="{color: ['var(--el-color-warning)', 'var(--el-color-success)',  'var(--el-color-info)'][scope.row.joinable_wc]}">{{['待验',
+              '正常', '拒绝'][scope.row.joinable_wc]}}</span>
             <!-- </div> -->
           </template>
 
         </el-table-column>
-        <el-table-column label="状态" width="100px" align="center" class-name="status">
+        <el-table-column label="状态" width="80px" align="center" class-name="status">
           <template #default="scope">
             <el-dropdown @command="onStatusCommand($event, scope.row)">
               <div style="display:flex;align-items:center;justify-content:center;cursor:pointer;">
@@ -298,7 +292,7 @@
               @change="onHideChange($event, scope.row)" />
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="right" width="200px" fixed="right">
+        <el-table-column label="操作" align="center" width="200px" fixed="right">
           <template #default="scope">
             <el-button type="primary" plain :icon="Edit" @click="onItemEditClick(scope.row)">编辑</el-button>
             <el-button type="danger" plain :icon="Delete" @click="onItemDeleteClick(scope.row)">删除</el-button>

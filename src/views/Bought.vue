@@ -6,9 +6,9 @@
           @click="onBatchAddToDownloadClick">批量加入下载</el-button>
         <el-input placeholder="群名" clearable v-model="filter.group_name"></el-input>
         <!-- <el-input placeholder="企业" clearable v-model="filter.company"></el-input> -->
-        <el-select placeholder="标签" multiple clearable collapse-tags v-model="filter.tags">
+        <!-- <el-select placeholder="标签" multiple clearable collapse-tags v-model="filter.tags">
           <el-option v-for="tag of tags" :key="tag.id" :label="tag.name" :value="tag.id" />
-        </el-select>
+        </el-select> -->
         <!-- <elui-china-area-dht placeholder="地区" isall clearable v-model="filter.area"></elui-china-area-dht> -->
         <!-- <el-input placeholder="备注" clearable v-model="filter.remark"></el-input> -->
         <el-select placeholder="下载" clearable v-model="filter.down_cnt">
@@ -51,13 +51,13 @@
         <!-- <el-table-column label="企业" prop="company" :formatter="cellFormatter" /> -->
         <!-- <el-table-column label="地区" prop="area" :formatter="areaFormatter" /> -->
         <!-- <el-table-column label="备注" prop="remark" :formatter="cellFormatter" /> -->
-        <el-table-column label="标签" min-width="120">
+        <!-- <el-table-column label="标签" min-width="120">
           <template #default="scope">
             <el-tag style="margin:2px;" v-for="tag of scope.row.tags" :key="tag" v-if="scope.row.tags.length > 0">
               {{tag}}</el-tag>
             <span v-else>--</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="类型" width="80">
           <template #default="scope">{{scope.row.type === 1 ? '企微' : '个微'}}</template>
         </el-table-column>
@@ -71,8 +71,8 @@
         <el-table-column label="企微可进" width="100px" align="center" class-name="joinable">
           <template #default="scope">
             <span style="margin-right:3px;"
-              :style="{color: ['var(--el-color-warning)', 'var(--el-color-success)',  'var(--el-color-info)'][scope.row.joinable]}">{{['未知',
-              '正常', '拒绝'][scope.row.joinable]}}</span>
+              :style="{color: ['var(--el-color-warning)', 'var(--el-color-success)',  'var(--el-color-info)'][scope.row.joinable_wc]}">{{['未知',
+              '正常', '拒绝'][scope.row.joinable_wc]}}</span>
           </template>
         </el-table-column>
 
@@ -125,9 +125,6 @@
   // 查询参数
   const filter = reactive({
     company: '',
-    tags: [],
-    area: [],
-    remark: '',
     group_name: '',
     type: null,
     down_cnt: null

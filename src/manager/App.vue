@@ -6,9 +6,11 @@
     </div>
     <div class="app-menu">
       <el-menu mode="horizontal" :default-active="currentRouteName" router>
-        <!-- <el-menu-item index="income" :route="routes[0]">收益</el-menu-item> -->
-        <el-menu-item index="qrcode" :route="routes[0]">活码</el-menu-item>
+        <el-menu-item index="provider" :route="routes[0]">账号</el-menu-item>
         <el-menu-item index="entrance" :route="routes[1]">群码</el-menu-item>
+        <el-menu-item index="qrcode" :route="routes[2]">活码</el-menu-item>
+        <el-menu-item index="exchange" :route="routes[3]">转赠</el-menu-item>
+        <el-menu-item index="work" :route="routes[4]">工作</el-menu-item>
       </el-menu>
     </div>
     <div class="app-user">
@@ -84,7 +86,7 @@
 
   onMounted(async () => {
     try {
-      const { data } = await axios.get('provider/index/index')
+      const { data } = await axios.get('manager/index/index')
       username.value = data.username
       score.value = data.score
       entranceValid.value = data.entrance_valid
