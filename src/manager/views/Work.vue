@@ -90,7 +90,7 @@
         <!-- <template #default="scope">{{['等待审核', '审核通过', '审核失败'][scope.row.sub_status]}}</template> -->
         <!-- <el-table-column label="审核时间" prop="valid_time" />
         <el-table-column label="状态信息" prop="err_msg" /> -->
-        <el-table-column label="提交时间" prop="add_time" />
+        <el-table-column label="日期" prop="add_time" />
         <el-table-column label="总UV" align="center">
           <template #default="scope">
             <el-button type="primary" link @click="onEntranceNumClick(scope.row)">{{scope.row.entrance.length}}
