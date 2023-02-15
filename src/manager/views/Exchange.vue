@@ -70,7 +70,7 @@
       </el-table>
     </div>
     <div class="common-pagination">
-      <el-pagination background layout="total,prev,pager,next" :default-page-size="pagination.pageSize"
+      <el-pagination background layout="total,prev,pager,next,jumper" :default-page-size="pagination.pageSize"
         v-model:current-page="pagination.page" :total="pagination.total" />
     </div>
   </div>

@@ -10,17 +10,25 @@
         </div>
       </div>
       <div class="common-action">
-        <!-- <el-button type="primary" :icon="Plus" @click="showAddDlg = true">添加群码</el-button> -->
+        <el-button type="primary" :icon="Download" @click="onBatchDownload">打包下载{{cart.size > 0 ? `（${cart.size}）` :
+          ''}}</el-button>
       </div>
     </div>
     <div class="common-content">
-      <el-table :data="tableData" v-loading="tableLoading" height="100%">
+      <el-table :data="tableData" v-loading="tableLoading" height="100%" @selection-change="onSelectionChange">
+        <el-table-column type="selection" width="55" />
         <el-table-column label="序号" prop="id" align="center" width="80px" />
         <el-table-column label="群码" align="center" width="80px">
           <template #default="scope">
             <el-image class="qr" :src="scope.row.im" :preview-src-list="previewSrcList" preview-teleported
               hide-on-click-modal :initial-index="tableData.indexOf(scope.row)" v-if="scope.row.im" />
             <span v-else>--</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="头像" prop="avatar" width="70">
+          <template #default="scope">
+            <el-avatar :size="40" shape="square" :src="scope.row.avatar" style="vertical-align:middle;">
+            </el-avatar>
           </template>
         </el-table-column>
         <el-table-column label="群名称" prop="name" :formatter="cellFormatter" />
@@ -31,11 +39,11 @@
         <el-table-column label="类型" width="80px">
           <template #default="scope">{{scope.row.type === 1 ? '企微' : '个微'}}</template>
         </el-table-column>
-        <el-table-column label="状态" align="center" width="80px">
+        <el-table-column label="企微权限" width="80px" align="center" class-name="joinable">
           <template #default="scope">
-            <span
-              :style="{color: ['var(--el-color-warning)', 'var(--el-color-success)', 'var(--el-color-success)', 'var(--el-color-info)'][scope.row.status]}">{{['等待审核',
-              '正常', '正常', '不可进群'][scope.row.status]}}</span>
+            <span style="margin-right:3px;"
+              :style="{color: ['var(--el-color-warning)', 'var(--el-color-success)',  'var(--el-color-info)',  'var(--el-color-danger)'][scope.row.joinable_wc]}">{{['待验',
+              '正常', '拒绝', '异常'][scope.row.joinable_wc]}}</span>
           </template>
         </el-table-column>
         <!-- <el-table-column label="价格" align="center">
@@ -58,7 +66,7 @@
       </el-table>
     </div>
     <div class="common-pagination">
-      <el-pagination background layout="total,prev,pager,next" :default-page-size="pagination.pageSize"
+      <el-pagination background layout="total,prev,pager,next,jumper" :default-page-size="pagination.pageSize"
         v-model:current-page="pagination.page" :total="pagination.total" />
     </div>
   </div>
@@ -174,7 +182,7 @@
 <script setup>
   import { ref, reactive, getCurrentInstance, onMounted, computed, watch, inject } from 'vue'
   import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
-  import { Search, Refresh, ArrowDown, Plus, DeleteFilled, Delete, Edit, Hide, View } from '@element-plus/icons-vue'
+  import { Search, Refresh, ArrowDown, Plus, DeleteFilled, Delete, Edit, Hide, View, Download } from '@element-plus/icons-vue'
   import { EluiChinaAreaDht } from 'elui-china-area-dht'
   import QrCode from 'qrcode-decoder'
 
@@ -263,7 +271,9 @@
   function loadData () {
     tableLoading.value = true
     axios.post('manager/entrance/index', filter, {
-      page: pagination.page
+      params: {
+        page: pagination.page
+      }
     }).then(({ data }) => {
       tableData.value = data.data
       previewSrcList.value = data.data.map((item) => {
@@ -444,6 +454,25 @@
       ElMessage.success('修改成功')
       loadData()
     }).catch(() => { })
+  }
+
+  /* 打包下载 */
+  const cart = ref(new Set())
+  function onSelectionChange (selection) {
+    tableData.value.forEach(item => {
+      if (selection.includes(item)) {
+        cart.value.add(item.id)
+      } else {
+        cart.value.delete(item.id)
+      }
+    })
+  }
+  function onBatchDownload () {
+    if (cart.value.size === 0) {
+      ElMessage.warning('请选择需要下载的群码')
+      return
+    }
+    location.href = '/api/rest/manager/entrance/download?ids=' + Array.from(cart.value).join(',')
   }
 
 </script>

@@ -11,12 +11,15 @@
         </div>
       </div>
       <div class="common-action">
-        <!-- <el-button type="primary" :icon="Plus" @click="onAddClick">提交活码</el-button> -->
+        <el-button type="primary" :icon="Download">打包下载活码</el-button>
+        <el-button type="primary" :icon="Download" @click="onEntranceBatchDownload">打包下载群码{{cartEntrance.size > 0 ?
+          `（${cartEntrance.size}）` : ''}}</el-button>
       </div>
     </div>
     <div class="common-content">
       <el-table :data="tableData" ref="mainTableRef" @row-dblclick="onTableRowDoubleClick" v-loading="tableLoading"
         row-key="id" height="100%">
+        <el-table-column type="selection" width="55" />
         <el-table-column type="expand">
           <template #default="props">
             <div class="entrance">
@@ -108,7 +111,7 @@
       </el-table>
     </div>
     <div class="common-pagination">
-      <el-pagination background layout="total,prev,pager,next" :default-page-size="pagination.pageSize"
+      <el-pagination background layout="total,prev,pager,next,jumper" :default-page-size="pagination.pageSize"
         v-model:current-page="pagination.page" :total="pagination.total" />
     </div>
   </div>
@@ -206,7 +209,7 @@
 </template>
 
 <script setup>
-  import { Plus, Search, Delete, Edit, Refresh, DeleteFilled } from '@element-plus/icons-vue'
+  import { Plus, Search, Delete, Edit, Refresh, DeleteFilled, Download } from '@element-plus/icons-vue'
   import { EluiChinaAreaDht } from 'elui-china-area-dht'
   import { reactive, ref, getCurrentInstance, onMounted, computed, watch, inject } from 'vue'
   import QrCode from 'qrcode-decoder'
@@ -397,8 +400,24 @@
     return !row.bought && !row.isInCart
   }
 
+  /*打包下载群码*/
+  const cartEntrance = ref(new Set())
   const onEntranceSelectChange = (selection, row) => {
-    row.isSelectAllEnabled = selection.length > 0
+    //row.isSelectAllEnabled = selection.length > 0
+    row.entrance.forEach(item => {
+      if (selection.includes(item)) {
+        cartEntrance.value.add(item.id)
+      } else {
+        cartEntrance.value.delete(item.id)
+      }
+    })
+  }
+  function onEntranceBatchDownload () {
+    if (cartEntrance.value.size === 0) {
+      ElMessage.warning('请选择需要下载的群码')
+      return
+    }
+    location.href = '/api/rest/manager/entrance/download?ids=' + Array.from(cartEntrance.value).join(',')
   }
 
   function cellFormatter (row, column, cellValue, index) {

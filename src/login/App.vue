@@ -119,7 +119,7 @@
   }
 
   const roleName = computed(() => (role) => {
-    return { user: '用户', staff: '员工', admin: '管理员', provider: '合作商', manager: 'XXX' }[role]
+    return { user: '用户', staff: '员工', admin: '管理员', provider: '合作商', manager: '团队管理' }[role]
   })
 </script>
 

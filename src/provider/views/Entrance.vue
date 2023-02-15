@@ -3,6 +3,16 @@
     <div class="common-header">
       <div class="common-filter">
         <el-input placeholder="企业" clearable v-model="filter.company"></el-input>
+        <el-select placeholder="企微可进" clearable v-model="filter.joinable_wc" v-if="filter.type !== 2">
+          <el-option label="待验" :value="1" />
+          <el-option label="正常" :value="2" />
+          <el-option label="拒绝" :value="3" />
+          <el-option label="异常" :value="4" />
+        </el-select>
+        <el-select placeholder="是否到期" clearable v-model="filter.expire">
+          <el-option label="未到期" :value="1" />
+          <el-option label="已到期" :value="2" />
+        </el-select>
         <div class="common-filter-buttons">
           <el-button :icon="Search" @click="onFilterClick">查询</el-button>
           <el-button :icon="Refresh" @click="onRefreshClick">刷新</el-button>
@@ -22,6 +32,12 @@
             <span v-else>--</span>
           </template>
         </el-table-column>
+        <el-table-column label="头像" prop="avatar" width="70">
+          <template #default="scope">
+            <el-avatar :size="40" shape="square" :src="scope.row.avatar" style="vertical-align:middle;">
+            </el-avatar>
+          </template>
+        </el-table-column>
         <el-table-column label="群名称" prop="name" :formatter="cellFormatter" />
         <!-- <el-table-column label="标签" :formatter="cellFormatter" min-width="160px">
           <template #default="scope">
@@ -39,30 +55,31 @@
         <el-table-column label="类型" width="80px">
           <template #default="scope">{{scope.row.type === 1 ? '企微' : '个微'}}</template>
         </el-table-column>
-        <el-table-column label="状态" width="80px" align="center">
+        <el-table-column label="企微权限" width="80px" align="center" class-name="joinable">
           <template #default="scope">
-            <span
-              :style="{color: ['var(--el-color-warning)', 'var(--el-color-success)', 'var(--el-color-success)', 'var(--el-color-info)'][scope.row.status]}">{{['等待审核',
-              '正常', '正常', '不可进群'][scope.row.status]}}</span>
+            <span style="margin-right:3px;"
+              :style="{color: ['var(--el-color-warning)', 'var(--el-color-success)',  'var(--el-color-info)',  'var(--el-color-danger)'][scope.row.joinable_wc]}">{{['待验',
+              '正常', '拒绝', '异常'][scope.row.joinable_wc]}}</span>
           </template>
         </el-table-column>
+        <el-table-column label="状态信息" prop="error_msg"></el-table-column>
         <!-- <el-table-column label="价格" align="center">
           <template #default="scope">{{scope.row.price}} 金币</template>
         </el-table-column> -->
-        <el-table-column label="下载次数" width="80px" align="center">
+        <!-- <el-table-column label="下载次数" width="80px" align="center">
           <template #default="scope">{{scope.row.buy_cnt}}</template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="到期时间" prop="expire_date" align="center" width="160px" :formatter="cellFormatter" />
-        <el-table-column label="添加时间" prop="add_time" align="center" width="160px" />
-        <el-table-column label="操作" align="center" width="300px">
+        <el-table-column label="上传时间" prop="add_time" align="center" width="160px" />
+        <!-- <el-table-column label="操作" align="center" width="300px">
           <template #default="scope">
             <el-button type="primary" plain :icon="Edit" @click="onItemEditClick(scope.row)">编辑</el-button>
-            <!-- <el-button :disabled="scope.row.status !== 1" :type="scope.row.hide === 0 ? 'warning' : 'info'" plain
+            <el-button :disabled="scope.row.status !== 1" :type="scope.row.hide === 0 ? 'warning' : 'info'" plain
               :icon="scope.row.hide === 0 ? Hide : View" @click="onItemHideClick(scope.row)">{{scope.row.hide === 0 ?
-              '下架' : '上架'}}</el-button> -->
+              '下架' : '上架'}}</el-button>
             <el-button type="danger" plain :icon="Delete" @click="onItemDeleteClick(scope.row)">删除</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
     </div>
     <div class="common-pagination">
@@ -233,10 +250,10 @@
   })
 
   const urls = computed({
-    get() {
+    get () {
       return formData.urls.join('\n')
     },
-    set(value) {
+    set (value) {
       formData.urls = value.split('\n')
     }
   })
@@ -290,7 +307,9 @@
   function loadData () {
     tableLoading.value = true
     axios.post('provider/entrance/index', filter, {
-      page: pagination.page
+      params: {
+        page: pagination.page
+      }
     }).then(({ data }) => {
       tableData.value = data.data
       previewSrcList.value = data.data.map((item) => {
@@ -390,9 +409,9 @@
       submitLoading.value = true
       axios.post('provider/entrance/upload', fd, {
         'Content-type': 'multipart/form-data'
-      }).then(() => {
+      }).then(({ message }) => {
         showAddDlg.value = false
-        ElMessageBox.alert('提交成功', '提示', {
+        ElMessageBox.alert(message, '提示', {
           type: 'success',
           callback: () => {
             location.reload()
