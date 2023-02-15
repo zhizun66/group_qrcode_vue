@@ -97,6 +97,9 @@
           </div>
         </div>
       </el-form-item>
+      <el-form-item label="链&emsp;接" prop="urls">
+        <el-input type="textarea" :row="2" placeholder="每行1个" v-model="urls" />
+      </el-form-item>
       <el-form-item label="类&emsp;型" prop="type">
         <el-radio-group v-model="formData.type">
           <el-radio :label="1" border>企微</el-radio>
@@ -216,6 +219,10 @@
   const showAddDlg = ref(false)
   const formData = reactive({
     qrcode: [],
+<<<<<<< HEAD
+    urls: [],
+=======
+>>>>>>> 42430916292287e18f9b51c708b3367139b6f08e
     // tags: [],
     company: '',
     type: 1,
@@ -227,11 +234,26 @@
     // price: 0,
     // limit: 0
   })
+
+  const urls = computed({
+    get() {
+      return formData.urls.join('\n')
+    },
+    set(value) {
+      formData.urls = value.split('\n')
+    }
+  })
+
   const formRule = reactive({
     qrcode: {
-      trigger: 'submit',
-      required: true,
-      message: '群码必选'
+      trigger: 'submit', validator: (_rule, _value, callback) => {
+        formData.qrcode.length > 0 || formData.urls.length > 0 ? callback() : callback(new Error('群码或链接必填其一'))
+      }
+    },
+    urls: {
+      trigger: 'submit', validator: (_rule, _value, callback) => {
+        formData.qrcode.length > 0 || formData.urls.length > 0 ? callback() : callback(new Error('群码或链接必填其一'))
+      }
     },
     type: {
       trigger: 'submit',
@@ -336,7 +358,7 @@
       // fd.append('price', formData.price)
       fd.append('type', formData.type)
 
-      const uidArr = []
+      //const uidArr = []
       let n = 0
       for (let file of formData.qrcode) {
         n++
@@ -346,9 +368,10 @@
           if (!res) {
             throw new Error(`第 ${n} 个二维码识别失败`)
           }
-          uidArr.push(file.uid)
-          fd.append('qrcode_' + file.uid, file.raw)
-          fd.append('decode_' + file.uid, res.data)
+          //uidArr.push(file.uid)
+          //fd.append('qrcode_' + file.uid, file.raw)
+          //fd.append('decode_' + file.uid, res.data)
+          fd.append('decode[]', res.data)
         } catch (err) {
           if (err instanceof Object) {
             ElNotification.error(err.message)
@@ -357,10 +380,14 @@
           }
         }
       }
-      fd.append('uid', uidArr)
+      //fd.append('uid', uidArr)
 
-      if (uidArr.length === 0) {
-        return
+      // if (uidArr.length === 0) {
+      //   return
+      // }
+
+      for (let url of formData.urls) {
+        fd.append('decode[]', url)
       }
 
       submitLoading.value = true

@@ -182,6 +182,9 @@
           </div>
         </div>
       </el-form-item>
+      <el-form-item label="链接" prop="urls">
+        <el-input type="textarea" :row="2" placeholder="每行1个" v-model="urls" />
+      </el-form-item>
       <el-form-item label="企业" prop="company">
         <el-input v-model="formData.company" />
       </el-form-item>
@@ -279,12 +282,23 @@
   }
   const formData = reactive({
     qrcode: [],
+    urls: [],
     company: '',
     area: [],
     tags: [],
     remark: '',
     sub_status: 0
   })
+
+  const urls = computed({
+    get() {
+      return formData.urls.join('\n')
+    },
+    set(value) {
+      formData.urls = value.split('\n')
+    }
+  })
+
   const onAddDlgClosed = () => {
     formData.qrcode = []
     formData.company = ''
@@ -299,8 +313,13 @@
   // 表单验证
   const formRules = reactive({
     qrcode: {
-      required: true, trigger: 'submit', validator: (rule, value, callback) => {
-        formData.qrcode.length > 0 ? callback() : callback(new Error('活码必选'))
+      trigger: 'submit', validator: (_rule, _value, callback) => {
+        formData.qrcode.length > 0 || formData.urls.length > 0 ? callback() : callback(new Error('活码或链接必填其一'))
+      }
+    },
+    urls: {
+      trigger: 'submit', validator: (_rule, _value, callback) => {
+        formData.qrcode.length > 0 || formData.urls.length > 0 ? callback() : callback(new Error('活码或链接必填其一'))
       }
     },
     company: { required: true, trigger: 'blur', message: '企业名称必填' },
@@ -351,7 +370,15 @@
   const onAddFormSubmit = () => {
     addFormRef.value.validate((valid) => {
       if (valid) {
-        axios.post('index/qrcode/add', formData).then(() => {
+        const form = {
+          qrcode: formData.qrcode.concat(formData.urls.filter(a => a.length > 0)),
+          company: formData.company,
+          area: formData.area,
+          tags: formData.tags,
+          remark: formData.remark,
+          sub_status: formData.sub_status
+        }
+        axios.post('index/qrcode/add', form).then(() => {
           showAddDlg.value = false
           ElMessageBox.alert('提交成功', '提示', {
             type: 'success',

@@ -152,6 +152,9 @@
           </div>
         </div>
       </el-form-item>
+      <el-form-item label="链接" prop="urls">
+        <el-input type="textarea" :row="2" placeholder="每行1个" v-model="urls" />
+      </el-form-item>
       <el-form-item label="企业" prop="company">
         <el-input v-model="formData.company" />
       </el-form-item>
@@ -253,8 +256,19 @@
   // const maxBuyTimes = inject('maxBuyTimes')
   const formData = reactive({
     qrcode: [],
+    urls: [],
     company: '',
   })
+
+  const urls = computed({
+    get() {
+      return formData.urls.join('\n')
+    },
+    set(value) {
+      formData.urls = value.split('\n')
+    }
+  })
+
   const onAddDlgClosed = () => {
     formData.qrcode = []
     formData.company = ''
@@ -265,10 +279,18 @@
   // 表单验证
   const formRules = reactive({
     qrcode: {
-      required: true, trigger: 'submit', validator: (rule, value, callback) => {
-        formData.qrcode.length > 0 ? callback() : callback(new Error('活码必选'))
+      trigger: 'submit', validator: (_rule, _value, callback) => {
+        formData.qrcode.length > 0 || formData.urls.length > 0 ? callback() : callback(new Error('活码或链接必填其一'))
       }
     },
+<<<<<<< HEAD
+    urls: {
+      trigger: 'submit', validator: (_rule, _value, callback) => {
+        formData.qrcode.length > 0 || formData.urls.length > 0 ? callback() : callback(new Error('活码或链接必填其一'))
+      }
+    },
+=======
+>>>>>>> 42430916292287e18f9b51c708b3367139b6f08e
     // company: { required: true, trigger: 'blur', message: '企业名称必填' },
     // tags: { required: true, trigger: 'blur', message: '标签必选' },
   })
@@ -332,7 +354,11 @@
   const onAddFormSubmit = () => {
     addFormRef.value.validate((valid) => {
       if (valid) {
-        axios.post('provider/qrcode/add', formData).then(({ message }) => {
+        const form = {
+          qrcode: formData.qrcode.concat(formData.urls.filter(a => a.length > 0)),
+          company: formData.company
+        }
+        axios.post('provider/qrcode/add', form).then(({ message }) => {
           showAddDlg.value = false
           ElMessageBox.alert(message, '提示', {
             type: 'success',

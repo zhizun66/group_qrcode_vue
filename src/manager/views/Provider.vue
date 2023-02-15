@@ -12,6 +12,9 @@
           <el-button :icon="Refresh" @click="onRefreshClick">刷新</el-button>
         </div>
       </div>
+      <div class="common-action">
+        <el-button type="primary" :icon="Promotion" @click="onInviteClick" :loading="inviteLoading">邀请</el-button>
+      </div>
     </div>
     <div class="common-content">
       <el-table :data="tableData" v-loading="tableLoading" height="100%">
@@ -58,7 +61,7 @@
   import { Axios } from 'axios';
   import { getCurrentInstance, onMounted, ref, reactive, watch } from 'vue'
   import { ElMessage, ElMessageBox, MessageBoxData } from 'element-plus'
-  import { Search, Refresh } from '@element-plus/icons-vue'
+  import { Search, Refresh, Promotion } from '@element-plus/icons-vue'
 
   const { proxy } = getCurrentInstance() as any
   const axios: Axios = proxy.axios
@@ -149,6 +152,16 @@
     } catch (e: any) {
 
     }
+  }
+
+  const inviteLoading = ref(false)
+  function onInviteClick () {
+    inviteLoading.value = true
+    axios.get('manager/provider/inviteUrl').then(({ data }) => {
+      ElMessageBox.alert(data.url, '您的邀请链接', { type: 'success', width: "800" }).catch(() => { })
+    }).catch(() => { }).finally(() => {
+      inviteLoading.value = false
+    })
   }
 
 </script>

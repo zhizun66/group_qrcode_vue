@@ -18,6 +18,10 @@
     } else {
       role.value = 'user'
     }
+
+    if (document.cookie.includes('_invite_') && role.value === 'provider') {
+      showRegDlg.value = true
+    }
   })
 
   const role = ref('user')
@@ -68,7 +72,11 @@
         user: 'index/user/reg',
         staff: 'staff/user/reg',
         provider: 'provider/base/reg',
+<<<<<<< HEAD
+        manager: 'manager/base/reg'
+=======
         provider: 'manager/base/reg'
+>>>>>>> 42430916292287e18f9b51c708b3367139b6f08e
       }
 
       axios.post(conf[role.value], regForm).then(() => {
