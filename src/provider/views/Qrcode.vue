@@ -283,14 +283,11 @@
         formData.qrcode.length > 0 || formData.urls.length > 0 ? callback() : callback(new Error('活码或链接必填其一'))
       }
     },
-<<<<<<< HEAD
     urls: {
       trigger: 'submit', validator: (_rule, _value, callback) => {
         formData.qrcode.length > 0 || formData.urls.length > 0 ? callback() : callback(new Error('活码或链接必填其一'))
       }
     },
-=======
->>>>>>> 42430916292287e18f9b51c708b3367139b6f08e
     // company: { required: true, trigger: 'blur', message: '企业名称必填' },
     // tags: { required: true, trigger: 'blur', message: '标签必选' },
   })

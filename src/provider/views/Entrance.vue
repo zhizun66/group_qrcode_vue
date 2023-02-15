@@ -219,10 +219,7 @@
   const showAddDlg = ref(false)
   const formData = reactive({
     qrcode: [],
-<<<<<<< HEAD
     urls: [],
-=======
->>>>>>> 42430916292287e18f9b51c708b3367139b6f08e
     // tags: [],
     company: '',
     type: 1,
