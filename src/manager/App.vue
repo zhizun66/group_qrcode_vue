@@ -102,8 +102,8 @@
 
   function onUserDropdownCommand (command) {
     if (command === 'logout') {
-      axios.post('provider/base/logout').then(() => {
-        location.href = '/login.html?provider'
+      axios.post('manager/base/logout').then(() => {
+        location.href = '/login.html?manager'
       }).catch(() => { })
     } else if (command === 'alter_pwd') {
       showChangePwdDlg.value = true
@@ -136,7 +136,7 @@
       if (!valid) {
         return
       }
-      axios.post('provider/index/repwd', { password: changePwdForm.password }).then(() => {
+      axios.post('manager/index/repwd', { password: changePwdForm.password }).then(() => {
         showChangePwdDlg.value = false
         ElMessage.success('修改密码成功')
       }).catch(() => { })
@@ -147,7 +147,7 @@
   async function onWithdrawClick () {
     try {
       withdrawBtnLoading.value = true
-      const { data } = await axios.get('provider/withdraw/alipay')
+      const { data } = await axios.get('manager/withdraw/alipay')
       withdrawBtnLoading.value = false
       const res = await ElMessageBox.prompt(`输入下支付宝收款账号,写错未收到款概不负责`, '提现', {
         inputValue: data.alipay,
