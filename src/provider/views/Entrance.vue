@@ -63,6 +63,13 @@
           </template>
         </el-table-column>
         <el-table-column label="状态信息" prop="error_msg"></el-table-column>
+        <el-table-column label="来源" width="80px" align="center" class-name="source">
+          <template #default="scope">
+            <span style="margin-right:3px;"
+              :style="{color: ['var(--el-color-warning)', 'var(--el-color-danger)'][scope.row.source-1]}">{{['上传',
+              '活码'][scope.row.source-1]}}</span>
+          </template>
+        </el-table-column>
         <!-- <el-table-column label="价格" align="center">
           <template #default="scope">{{scope.row.price}} 金币</template>
         </el-table-column> -->

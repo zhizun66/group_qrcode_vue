@@ -103,6 +103,14 @@
           </template>
         </el-table-column>
         <el-table-column label="状态信息" prop="error_msg"></el-table-column>
+        <el-table-column label="来源" width="80px" align="center" class-name="source">
+          <template #default="scope">
+            <span style="margin-right:3px;"
+              :style="{color: ['var(--el-color-warning)', 'var(--el-color-danger)'][scope.row.source-1]}">{{['上传',
+              '活码'][scope.row.source-1]}}</span>
+          </template>
+        </el-table-column>
+
         <el-table-column label="上架" width="100px" align="center">
           <template #default="scope">
             <el-switch v-model="scope.row.hide" :active-value="0" :inactive-value="1"

@@ -2,7 +2,7 @@
   <header class="app-header">
     <div class="app-name">
       <div></div>
-      <span>企微活码收集</span>
+      <span>企微群码检测</span>
     </div>
     <div class="app-menu">
       <el-menu mode="horizontal" :default-active="currentRouteName" router>
